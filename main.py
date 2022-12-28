@@ -2,11 +2,12 @@ import numpy as np
 import cv2
 from argparse import ArgumentParser
 from src.utils.images import Image, get_images
+from src.stitcher import Stitcher
 
-import logging
+
 import os
 
-logging.getLogger().setLevel(logging.INFO)
+
 
 if __name__ == "__main__":
     parser = ArgumentParser("Panorama Stitching")
@@ -18,5 +19,19 @@ if __name__ == "__main__":
     if not os.path.exists(args.output_dir):
         os.makedirs(args.output_dir)
 
-    logging.info(f"Load images for {args.input_dir}")
-    images = get_images(args.input_dir)
+    
+    stitcher = Stitcher(args)
+
+    ### load images
+    stitcher.load_images()
+
+    ### compute sift features
+    stitcher.compute_SIFT()
+
+    ## image matching and finding components
+    stitcher.compute_matches()
+
+    
+    
+    ## matching image
+

@@ -12,10 +12,10 @@ class Image:
         self.image = cv2.imread(path)
         self.keypoints = None
         self.features = None
-        self.group: int = 0 # 属于第几张图
+        self.components_id: int = -1 # 属于第几张图
         self.H: np.ndarray = np.eye(3)
         self.gain: np.ndarray = np.ones(3, dtype=float)
-        print(self.image.shape, self.path)
+        # print(self.image.shape, self.path)
 
     def get_sift_feats(self):
         if (self.keypoints == None or self.features == None):
@@ -36,3 +36,5 @@ def get_images(dir) -> List[Image]:
 if __name__ == "__main__":
     pth = "inputs/dongcao"
     images = get_images(pth)
+    kpts, features = images[0].get_sift_feats()
+    print("kpts", len(kpts))
