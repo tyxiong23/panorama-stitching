@@ -33,7 +33,8 @@ class Matcher:
                     print(f"add_raw_match {match.idA} -> {match.idB}")
                     self.pair_matches.append(match)
         
-            
+    
+    ### 划分不同的全景图
     def connect_components(self) -> List[PairMatch]:
         self.connected_components = []
         components_id = 0

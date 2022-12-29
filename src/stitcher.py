@@ -30,6 +30,10 @@ class Stitcher:
         # print(self.images[0].features.shape, len(self.images[0].keypoints))
         self.matcher = Matcher(self.images)
         self.matcher.match()
-        self.matcher.connect_components()
+        self.panorama_components = self.matcher.connect_components()
+        
+        # 计算homography矩阵，合并结果
+        for pano_component in self.panorama_components:
+            pass
         pass
 
