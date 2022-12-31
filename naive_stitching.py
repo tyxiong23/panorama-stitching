@@ -1,5 +1,5 @@
 """
------- NOT USED IN THE MAIN SCRIPT ------
+最简单版本的双图拼接demo，仅供参考
 Simple stitching with only two images.
 """
 

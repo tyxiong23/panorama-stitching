@@ -18,6 +18,7 @@ class Matcher:
         self.dist_ratio = dist_ratio
         self.pair_matches = None
         self.connected_components = None
+        self.components_matches = None
 
     
     def match(self, max_images: int = 6) -> List[PairMatch]:
@@ -35,16 +36,17 @@ class Matcher:
         
     
     ### 划分不同的全景图
-    def connect_components(self) -> List[PairMatch]:
-        self.connected_components = []
+    def connect_components(self):
+        self.connected_components, self.components_matches = [], []
         components_id = 0
         pair_matches = self.pair_matches.copy()
-        # pair_matches = sorted(pair_matches, key=lambda x: len(x), reverse=True)
+        pair_matches = sorted(pair_matches, key=lambda x: len(x), reverse=True)
 
         # 不考虑落单的照片单独放成一类
         while len(pair_matches) > 0:
             tmp_match: PairMatch = pair_matches.pop(0)
             connected_component = set([tmp_match.idA, tmp_match.idB])
+            component_matches = [tmp_match]
 
             # 每一个component只需要遍历一次
             while True:
@@ -53,23 +55,26 @@ class Matcher:
                 while (idx < len(pair_matches)):
                     # print("idx - len", idx, len(pair_matches))
                     tmp_match = pair_matches[idx]
-                    if (tmp_match.idA in connected_component or
-                        tmp_match.idB in connected_component):
+                    if (tmp_match.idA in connected_component) ^ (tmp_match.idB in connected_component):
                         connected_component.update([tmp_match.idA, tmp_match.idB])
                         pair_matches.pop(idx)
+                        component_matches.append(tmp_match)
                         iffind = True
+                    elif (tmp_match.idA in connected_component) and (tmp_match.idB in connected_component):
+                        pair_matches.pop(idx)
                     else:
                         idx += 1
                 if not iffind:
                     break
 
             self.connected_components.append(list(connected_component))
+            self.components_matches.append(component_matches)
             for idx in connected_component:
                 self.images[idx].components_id = components_id
             logging.info(f"find connected components {components_id}\t " + str(connected_component))
             components_id += 1
 
-        return self.connected_components
+        return self.connected_components, self.components_matches
         
 
 

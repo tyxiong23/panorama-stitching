@@ -1,0 +1,1 @@
+ffmpeg -i inputs/videos/dongcao/video.mp4 -r 3 -q:v 2 -f image2 inputs/videos/dongcao/fps3/%02d.jpg

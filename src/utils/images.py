@@ -13,7 +13,7 @@ class Image:
         self.keypoints = None
         self.features = None
         self.components_id: int = -1 # 属于第几张图
-        self.H: np.ndarray = np.eye(3)
+        self.H: np.ndarray = None
         self.gain: np.ndarray = np.ones(3, dtype=float)
         # print(self.image.shape, self.path)
 

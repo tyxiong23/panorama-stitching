@@ -12,6 +12,7 @@ import os
 if __name__ == "__main__":
     parser = ArgumentParser("Panorama Stitching")
     parser.add_argument(dest="input_dir", help="directory of input images")
+    parser.add_argument("--blending", type=str, choices=["no", "simple", "mbb"], default="no")
     # parser.add_argument()
 
     args = parser.parse_args()
@@ -28,10 +29,11 @@ if __name__ == "__main__":
     ### compute sift features
     stitcher.compute_SIFT()
 
-    ## image matching and finding components
+    ## image matching and finding connected components (panoramas)
     stitcher.compute_matches()
 
+    ## compute homography for each panorama component
+    stitcher.build_homographies()
     
-    
-    ## matching image
-
+    ## generate panorama images with blending
+    stitcher.draw_homography()

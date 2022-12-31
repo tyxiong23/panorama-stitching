@@ -20,16 +20,17 @@ class A(object):
 img = cv2.imread("inputs/dongcao/01.jpg")
 print(img.shape)
 
-theta = np.pi / 180 * 45
-M = [np.cos(theta), -np.sin(theta), 100, np.sin(theta), np.cos(theta), -200, 0,0, 1]
+theta = np.pi / 180 * 00
+x, y = 300, 0
+M = [np.cos(theta), -np.sin(theta), x, np.sin(theta), np.cos(theta), y, 0,0, 1]
 M = np.array(M).reshape(3,3)
 print(M)
-img_warp = cv2.warpPerspective(np.ones_like(img, dtype=np.uint8), M, img.shape[1::-1])
+img_warp = cv2.warpPerspective(img, M, (int(img.shape[1] * 1.5), int(img.shape[0]*1.5)))
 
 print(np.unique(img_warp))
 print(img_warp.shape)
-# cv2.imshow("Warp", img_warp)
-# cv2.waitKey(0)
+cv2.imshow("Warp", img_warp)
+cv2.waitKey(0)
 
 a = A(1,2)
 b = A(1,3)
@@ -46,3 +47,6 @@ while(i < len(ss)):
         ss.pop(i)
     else:
         i += 1
+
+a = [i for i in range(10) if i % 4 == 0 or i % 3 == 0]
+print(a)

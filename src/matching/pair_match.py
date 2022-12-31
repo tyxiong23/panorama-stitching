@@ -26,7 +26,7 @@ class PairMatch(object):
         self.matchedKpts_b = np.float32([self.imageB.keypoints[match.trainIdx].pt for match in self.matches])
         
         self.H, self.status = cv2.findHomography(
-            self.matchedKpts_a, self.matchedKpts_b, cv2.RANSAC, 
+            self.matchedKpts_b, self.matchedKpts_a, cv2.RANSAC, 
             ransacReprojThreshold=ransac_reproj_thr,
             maxIters=ransac_maxiters
         )
@@ -40,7 +40,11 @@ class PairMatch(object):
         self.overlap = cv2.warpPerspective(np.ones_like(self.imageB.image[..., 0], dtype=np.uint8), self.H, shapeA[1::-1])
         self.overlap_area = self.overlap.sum()
 
-
+    @property
+    def homography(self):
+        if self.status is None:
+            self.compute_homography()
+        return self.H
     
     @property
     def is_valid(self, alpha: float = 8, beta: float = 0.3):
@@ -62,7 +66,7 @@ class PairMatch(object):
             ] > 0
         ]
         num_matched_in_overlap = matched_in_overlap.shape[0]
-        print(f"NUM_match_overlap {self.idA} -> {self.idB}", num_matched_in_overlap)
+        # print(f"NUM_match_overlap {self.idA} -> {self.idB}", num_matched_in_overlap)
 
         ### 对应于overlap的区域而言，有足够多的inlier, 同时重合区域有一定的特征点可以匹配上
         return self.status.sum() >= alpha + beta * num_matched_in_overlap and num_matched_in_overlap >= self.MIN_OVERLAP_MATCHES 
