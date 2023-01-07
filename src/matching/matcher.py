@@ -5,11 +5,11 @@ from src.matching.pair_match import PairMatch
 import cv2
 import logging
 
-
 """
 1. find matchers for each image pairs
 2. get connected components for each panorama
 """
+
 
 class Matcher:
     def __init__(self, images: List[Image], dist_ratio: float = 0.75) -> None:
@@ -20,21 +20,19 @@ class Matcher:
         self.connected_components = None
         self.components_matches = None
 
-    
     def match(self, max_images: int = 6) -> List[PairMatch]:
         self.pair_matches = []
         for i in range(self.num_images - 1):
             match_list = []
-            for j in range(i+1, self.num_images):
-                match_list.append(self.compute_raw_match(i,j))
-            match_list = sorted(match_list, key=lambda x: len(x), reverse=True)[:max_images] # 按照 match 数量多少排序
+            for j in range(i + 1, self.num_images):
+                match_list.append(self.compute_raw_match(i, j))
+            match_list = sorted(match_list, key=lambda x: len(x), reverse=True)[:max_images]  # 按照 match 数量多少排序
             # print([len(i) for i in match_list])
             for match in match_list:
                 if match.is_valid:
                     print(f"add_raw_match {match.idA} -> {match.idB}")
                     self.pair_matches.append(match)
-        
-    
+
     ### 划分不同的全景图
     def connect_components(self):
         self.connected_components, self.components_matches = [], []
@@ -75,12 +73,6 @@ class Matcher:
             components_id += 1
 
         return self.connected_components, self.components_matches
-        
-
-
-
-        
-              
 
     # 计算第i,j个图像之间的matching
     def compute_raw_match(self, i: int, j: int) -> PairMatch:
@@ -94,10 +86,3 @@ class Matcher:
                 matches.append(m)
 
         return PairMatch(i, j, imgA, imgB, matches)
-
-                
-
-        
-
-    
-

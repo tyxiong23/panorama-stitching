@@ -6,7 +6,9 @@ import os
 from src.utils.images import Image
 from src.utils.panorama_utils import get_best_panorama_parameters, get_weight_matrix
 
-def add_image(panorama: np.ndarray, image: Image, weight: np.ndarray, offset: np.ndarray, pano_mask: np.ndarray, idX: int, total_num: int):
+
+def add_image(panorama: np.ndarray, image: Image, weight: np.ndarray, offset: np.ndarray, pano_mask: np.ndarray,
+              idX: int, total_num: int):
     assert idX <= 25, "maximum 25 images in a panorama"
     pano_size = (panorama.shape[1], panorama.shape[0])
     image_H = offset @ image.H
@@ -17,9 +19,9 @@ def add_image(panorama: np.ndarray, image: Image, weight: np.ndarray, offset: np
     warped_weight = cv2.warpPerspective(img_weight, image_H, pano_size)
     img_weight = np.expand_dims(warped_weight, axis=2).repeat(3, axis=2)
     # norm_img_weight = np.zeros_like(weight)
-    
-    norm_img_weight = np.divide(img_weight, (img_weight + weight), where=(img_weight + weight)!=0)
-    
+
+    norm_img_weight = np.divide(img_weight, (img_weight + weight), where=(img_weight + weight) != 0)
+
     panorama = np.where(
         warped_mask + pano_mask == 0,
         0,
@@ -28,16 +30,16 @@ def add_image(panorama: np.ndarray, image: Image, weight: np.ndarray, offset: np
     pano_mask = np.where(
         warped_mask + pano_mask == 0,
         0,
-        norm_img_weight * warped_mask * (idX+1) * (240 // total_num) + (1 - norm_img_weight) * pano_mask
+        norm_img_weight * warped_mask * (idX + 1) * (240 // total_num) + (1 - norm_img_weight) * pano_mask
     )
 
     weight = (weight + img_weight) / (weight + img_weight).max()
     return panorama, weight, pano_mask
-    
+
 
 def draw_simple_blending(output_dir: str, images: List[Image], pano_id: int):
     assert len(images) >= 2, "len(images) < 2"
-    
+
     shapes_Hs = [(i.image.shape, i.H) for i in images]
     added_offset, pano_size = get_best_panorama_parameters(shapes_Hs)
     # print("added_offsets", added_offset)
