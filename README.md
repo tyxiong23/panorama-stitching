@@ -53,7 +53,7 @@ python main.py <input-dir>
 
 虽然是同一个场景照出来的照片，但是可能出现不同照片光强不同的情况。此时需要对于强度进行重新计算，进行增益补偿。
 
-根据Error Function求解最优解，可以得到每张图片在融合时所需的增益补偿：![image-20230108165957901](/Users/pzqnewmac/Desktop/VR/panorama-stitching/report-related/image-20230108165957901.png)
+根据Error Function求解最优解，可以得到每张图片在融合时所需的增益补偿：![image-20230108165957901](report-related/image-20230108165957901.png)
 
 （其中N_ij为第i和第j个图像重合的像素点数，g_i为对第i张图片的增益，I^bar_ij为第ij张图片重合部分的光强平均）
 
@@ -97,8 +97,8 @@ python main.py <input-dir>
 
 | 选项                 | 输出全景图                                                   |
 | -------------------- | ------------------------------------------------------------ |
-| no-gain-compensation | ![panorama_0_no_blending_no_gain](/Users/pzqnewmac/Desktop/VR/panorama-stitching/inputs/test/result/panorama_0_no_blending_no_gain.png) |
-| gain-compensation    | ![panorama_0_no_blending](/Users/pzqnewmac/Desktop/VR/panorama-stitching/inputs/test/result/panorama_0_no_blending.png) |
+| no-gain-compensation | ![panorama_0_no_blending_no_gain](inputs/test/result/panorama_0_no_blending_no_gain.png) |
+| gain-compensation    | ![panorama_0_no_blending](inputs/test/result/panorama_0_no_blending.png) |
 
 可以看到，没有进行gaincompensation时，左下角图片的山体较整体呈现较亮的情况，但是进行了gain compensation后整体山体的颜色变得更加统一。
 
