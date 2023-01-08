@@ -60,6 +60,7 @@ python main.py <input-dir> --blending [no/simple/mbb]
 |--|--|--|
 |no-blending|![](inputs/caoping/result/mask_0_no_blending.png)|![](inputs/caoping/result/panorama_0_no_blending.png)|
 |simple-blending|![](inputs/caoping/result/mask_0.png)|![](inputs/caoping/result/panorama_0.png)|
+
 其中blending mask 图中颜色的深浅用于区分不同图片，意在用mask的离散程度展示融合效果
 
 
