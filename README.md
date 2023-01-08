@@ -19,7 +19,7 @@ python main.py <input-dir> --blending [no/simple/mbb]
 
 ~~~
 工作路径
-|-- inputs
+|-- inputs ##输入图片和结果
 |-- src # 源代码
 |-- main.py # 主程序
 ~~~
@@ -32,6 +32,37 @@ python main.py <input-dir> --blending [no/simple/mbb]
 
 #### PairMatch
 用于表示一对匹配上的图片（A and B），可用于判断匹配是否有效（valid）、计算Homograhy矩阵
+
+### 难点与解决方案
+
+**1、如何实现多组图片的分别拼接？**
+
+在输入图片分属于不同全景图时，我们在matching的过程中会查询图片之间的关联性，把每一组互相关联的图片分成不同的组（connected-component），在组内计算homography矩阵并生成最后的结果。
+
+**2、视角选择**
+
+在计算homography矩阵时，实际上计算的都是其余照片相对于某张基准图片（H矩阵为单位阵）的位置。在选取基准图片时，我们遍历了所有可能的图片，选取拼接图片高度最小的结果输出（这样拼接图片基本在视角正中心）。
+
+**2、如何提升照片的拼接效果**
+
+
+
+### 局限性与可改进方向
+
+
+
+
+### 实验结果
+
+#### 基础版本（无 Gain Compensation）
+
+|选项|blending weights|输出全景图|
+|--|--|--|
+|no-blending|![](inputs/caoping/result/mask_0_no_blending.png)|![](inputs/caoping/result/panorama_0_no_blending.png)|
+|simple-blending|![](inputs/caoping/result/mask_0.png)|![](inputs/caoping/result/panorama_0.png)|
+
+
+
 
 ### 小组分工
 - 熊天翼：完成全景图像拼接的python代码基础框架（SIFT + 特征点匹配 + matching + 拼接），实现了多图拼接和simple blending功能。
