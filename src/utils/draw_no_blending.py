@@ -17,7 +17,7 @@ def add_image(panorama: np.ndarray, image: Image, offset: np.ndarray, pano_mask:
     return panorama, pano_mask
     
 
-def draw_no_blending(output_dir: str, images: List[Image], pano_id: int):
+def draw_no_blending(output_dir: str, images: List[Image], pano_id: int, gain_comp: bool = False):
     assert len(images) >= 2, "len(images) < 2"
     
     shapes_Hs = [(i.image.shape, i.H) for i in images]
@@ -28,8 +28,9 @@ def draw_no_blending(output_dir: str, images: List[Image], pano_id: int):
     pano_mask = np.zeros_like(panorama, dtype=np.uint8)
     for i, image in enumerate(images):
         panorama, pano_mask = add_image(panorama, image, added_offset, pano_mask, i, len(images))
+    gain_comp_str = "gain_comp" if gain_comp else "no_gain"
 
-    mask_path = os.path.join(output_dir, f"mask_{pano_id}_no_blending.png")
+    mask_path = os.path.join(output_dir, f"mask_{pano_id}_no_blending_{gain_comp_str}.png")
     cv2.imwrite(mask_path, pano_mask)
-    out_path = os.path.join(output_dir, f"panorama_{pano_id}_no_blending.png")
+    out_path = os.path.join(output_dir, f"panorama_{pano_id}_no_blending_{gain_comp_str}.png")
     cv2.imwrite(out_path, panorama)

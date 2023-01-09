@@ -8,6 +8,7 @@ from src.matching.matcher import Matcher
 from src.matching.pair_match import PairMatch
 from src.utils.draw_simple_blending import draw_simple_blending
 from src.utils.draw_no_blending import draw_no_blending
+from src.utils.draw_multi_band_blending import draw_multi_band_blending
 from src.optimizations.gain_compensation import gain_compensation
 from typing import List
 
@@ -22,6 +23,7 @@ class Stitcher:
         self.panorama_components = None
         self.components_matches = None
         self.blending = args["blending"]
+        self.gain_comp = args["gain_compensation"] == "yes"
         self.n = args["gain_sigma_n"]
         self.g = args["gain_sigma_g"]
 
@@ -97,8 +99,10 @@ class Stitcher:
             logging.info(f"Draw panorama {pano_id} with {self.blending} blending...")
             images = [self.images[i] for i in panorama_component]
             if self.blending == "no":
-                draw_no_blending(self.output_dir, images, pano_id)
+                draw_no_blending(self.output_dir, images, pano_id, gain_comp=self.gain_comp)
             if self.blending == "simple":
-                draw_simple_blending(self.output_dir, images, pano_id)
+                draw_simple_blending(self.output_dir, images, pano_id, gain_comp=self.gain_comp)
+            if self.blending == "mbb":
+                draw_multi_band_blending(self.output_dir, images, pano_id, gain_comp=self.gain_comp)
         # for component_id
         # if simple_blending:

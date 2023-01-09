@@ -102,9 +102,22 @@ python main.py <input-dir>
 
 可以看到，没有进行gaincompensation时，左下角图片的山体较整体呈现较亮的情况，但是进行了gain compensation后整体山体的颜色变得更加统一。
 
-#### 加强版本2: 不同Blending效果比较
+#### 加强版本2: 不同Blending效果比较 (都已加上 gain compensation)
 
+| 选项 | 全景图拼接细节                                               |
+| -- | ------------------------------------------------------------ |
+| simple-blending | ![simple-blending](report-related/simple.png) |
+| multi-band-blending | ![mbb](report-related/mbb.png) |
 
+从这一处图与图之间连结的细节可以看到，simple-blending在图与图的交界处很模糊、有重影，很影响人的体验，但是multi-band blending可以很好的避免这个问题，同样的细节不会出现两次。
+
+| 选项                  | 输出全景图                                                                                   |
+|---------------------|-----------------------------------------------------------------------------------------|
+| no-blending         | ![no-blending](inputs/test/result/panorama_0_no_blending_no_gain.png)                   |
+| simple-blending     | ![simple-blending](inputs/test/result/panorama_0_simple_blending_gain_comp.png)         |
+| multi-band-blending | ![multi-band-blending](inputs/test/result/panorama_0_multi_band_blending_gain_comp.png) |
+
+从这个整体的比较来看，很明显，no-blending是不可取的，因为图与图之间的分割过于明显，simple-blending的效果已经不错，但是multi-band-blending在处理图拼接时更为光滑流畅，有种“柔光”的感觉。
 
 ### 小组分工
 - 熊天翼：完成全景图像拼接的python代码基础框架（SIFT + 特征点匹配 + matching + 拼接），实现了多图拼接和simple blending功能。

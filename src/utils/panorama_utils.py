@@ -13,6 +13,27 @@ def get_warped_corners(original_shape, H):
     # print(warped_corners_prime)
     return warped_corners
 
+
+def get_offset(corners):
+    offx, offy = max(0, -float(min(corners[:3][0][0], corners[:3][2][0]))), max(0, -float(min(corners[:3][0][1], corners[:3][1][1])))
+    return np.array([[1, 0, offx],[0, 1, offy],[0, 0, 1],],np.float32)
+
+
+def get_weight_parameters(shape_H: Tuple, panorama: np.ndarray):
+    corners = get_warped_corners(shape_H[0], shape_H[1])
+    added_offset = get_offset(corners)
+    corners = get_warped_corners(shape_H[0], added_offset @ shape_H[1])
+    if panorama is None:
+        corners_images = [corners]
+    else:
+        corners_panorama = get_warped_corners(panorama.shape, added_offset)
+        corners_images = [corners, corners_panorama]
+    corners_images = np.concatenate(corners_images, axis=0)
+    deltaX = int(np.ceil(corners_images[:, 0].max()) - np.floor(corners_images[:, 0].min()))
+    deltaY = int(np.ceil(corners_images[:, 1].max()) - np.floor(corners_images[:, 1].min()))
+    panorama_size = (deltaX, deltaY)
+    return added_offset, panorama_size
+
 def get_panorama_parameters(shapes_Hs: List[Tuple], trans = np.eye(3, dtype=float)):
     warped_corners_list: List[np.ndarray] = [
         get_warped_corners(img_shape, trans @ H) for (img_shape, H) in shapes_Hs

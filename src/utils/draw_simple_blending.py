@@ -37,7 +37,7 @@ def add_image(panorama: np.ndarray, image: Image, weight: np.ndarray, offset: np
     return panorama, weight, pano_mask
 
 
-def draw_simple_blending(output_dir: str, images: List[Image], pano_id: int):
+def draw_simple_blending(output_dir: str, images: List[Image], pano_id: int, gain_comp: bool = False):
     assert len(images) >= 2, "len(images) < 2"
 
     shapes_Hs = [(i.image.shape, i.H) for i in images]
@@ -51,8 +51,9 @@ def draw_simple_blending(output_dir: str, images: List[Image], pano_id: int):
         panorama, weight, pano_mask = add_image(panorama, image, weight, added_offset, pano_mask, i, len(images))
         # mask_path = os.path.join(output_dir, f"panorama_{pano_id}_{i}.png")
         # cv2.imwrite(mask_path, panorama)
+    gain_comp_str = "gain_comp" if gain_comp else "no_gain"
 
-    mask_path = os.path.join(output_dir, f"mask_{pano_id}.png")
+    mask_path = os.path.join(output_dir, f"mask_{pano_id}_simple_blending_{gain_comp_str}.png")
     cv2.imwrite(mask_path, pano_mask)
-    out_path = os.path.join(output_dir, f"panorama_{pano_id}.png")
+    out_path = os.path.join(output_dir, f"panorama_{pano_id}_simple_blending_{gain_comp_str}.png")
     cv2.imwrite(out_path, panorama)
